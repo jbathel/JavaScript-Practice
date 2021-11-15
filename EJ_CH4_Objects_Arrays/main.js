@@ -1,6 +1,5 @@
 'use strict';
 // Eloquent JavaScript
-// Chapter 4 Program - The Weresquirrel
 
 // Chapter 4 Exercises - Data Structures: Objects and Arrays
 /* 
@@ -27,7 +26,7 @@ function range(start, end) {
 
 console.log(range(1, 10));
 
-// Function that returns array containing all numbers from start to end
+// Function that takes an array of numbers and returns the sum of these numbers
 function sum(arr) {
   let arrSum = 0;
   for (const num of arr) {
@@ -39,6 +38,11 @@ function sum(arr) {
 // Test case
 console.log(sum(range(1, 10)));
 // 55
+
+// Bonus:
+// Function that takes three values and returns an array that
+// increments by the third value (step) and works with negative
+// values as well
 
 function rangeStep(start, end, step = start < end ? 1 : -1) {
   let arrRangeStep = [];
@@ -67,7 +71,7 @@ Write a function 'reverseArrayInPlace' that takes in an array
 as its argument and modifies the array by reversing its elements.
 Do not use the 'reverse' method. 
 */
-// Mathods that create a new array
+// Methods that create a new array
 function reverseArray(arr) {
   // Create a new array by reversing given array
   let reverseArr = [];
@@ -79,10 +83,12 @@ function reverseArray(arr) {
   return reverseArr;
 }
 
+// Map
 function reverseArrayMap(arr) {
   return arr.map((num, index) => arr[arr.length - (index + 1)]);
 }
 
+// Reduce
 function reverseArrayReduce(arr) {
   return arr.reduce(
     (acc, num, index) => [...acc, arr[arr.length - (index + 1)]],
@@ -90,7 +96,7 @@ function reverseArrayReduce(arr) {
   );
 }
 
-// Methods that do not create a new array
+// Method that do not create a new array
 function reverseArrayInPlace(arr) {
   for (let i = 0; i < Math.floor(arr.length / 2); i++) {
     // console.log('Start:', arr[i]);
@@ -133,20 +139,34 @@ function arrayToList(arr) {
 // produces an array from a list
 function listToArray(list) {
   let arr = [];
+  for (let node = list; node; node = node.rest) {
+    arr.push(node.value);
+  }
   return arr;
 }
-// helper function that takes an element & list and creates a new list that adds the element to the front of the input list
-function prepend(element) {}
-// returnss the element at the given position or undefined if not in the list
-function nth(index) {}
+// helper function that takes an element & list and creates a new list that
+// adds the element to the front of the input list
+function prepend(value, list) {
+  return { value, rest: list };
+}
+// Function that takes in a list and a number, returning the
+// element at the given position or undefined if not in the list
+function nth(list, num) {
+  // Iterative
+  // Recursive
+  if (!list) return undefined;
+  else if (num == 0) return list.value;
+  else return nth(list.rest, num - 1);
+}
 
 console.log(arrayToList([10, 20, 30]));
 // → {value: 10, rest: {value: 20, rest: null}}
 console.log(listToArray(arrayToList([10, 20, 30])));
 // → [10, 20, 30]
-console.log(prepend(10, prepend(20, null)));
+console.log(prepend(1, prepend(10, prepend(20, null))));
+console.log(prepend(1, null));
 // → {value: 10, rest: {value: 20, rest: null}}
-console.log(nth(arrayToList([10, 20, 30]), 1));
+console.log(nth(arrayToList([10, 20, 30]), 2));
 // → 20
 
 /* 
@@ -156,3 +176,30 @@ only if they are the same value or are objects with the same properties,
 where the values of the properties are equal when compared when
 compared with a recursive call to deepEqual.
 */
+function deepEqual(a, b) {
+  // Check values
+  if (a === b) return true;
+  // Check typeof
+  if (a == null || typeof a != 'object' || b == null || typeof b != 'object')
+    return false;
+  // Check both levels - compare keys and values
+  let keysA = Object.keys(a);
+  let keysB = Object.keys(b);
+  // console.log(keysA);
+  // console.log(keysB);
+  if (keysA.length != keysB.length) {
+    return false;
+  }
+  for (let key of keysA) {
+    if (!keysB.includes(key) || !deepEqual(a[key], b[key])) return false;
+  }
+  return true;
+}
+
+let obj = { here: { is: 'an' }, object: 2 };
+console.log(deepEqual(obj, obj));
+// → true
+console.log(deepEqual(obj, { here: 1, object: 2 }));
+// → false
+console.log(deepEqual(obj, { here: { is: 'an' }, object: 2 }));
+// → true
