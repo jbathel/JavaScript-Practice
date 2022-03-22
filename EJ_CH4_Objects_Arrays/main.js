@@ -17,6 +17,7 @@ or by 1 if none given.
 // Function that returns array containing all numbers from start to end
 function range(start, end) {
   let arrRange = [];
+  // TODO: Try using a 'for(let element of array)' loop
   while (start <= end) {
     arrRange.push(start);
     start++;
@@ -90,10 +91,7 @@ function reverseArrayMap(arr) {
 
 // Reduce
 function reverseArrayReduce(arr) {
-  return arr.reduce(
-    (acc, num, index) => [...acc, arr[arr.length - (index + 1)]],
-    []
-  );
+  return arr.reduce((acc, num, index) => [...acc, arr[arr.length - (index + 1)]], []);
 }
 
 // Method that do not create a new array
@@ -180,8 +178,7 @@ function deepEqual(a, b) {
   // Check values
   if (a === b) return true;
   // Check typeof
-  if (a == null || typeof a != 'object' || b == null || typeof b != 'object')
-    return false;
+  if (a == null || typeof a != 'object' || b == null || typeof b != 'object') return false;
   // Check both levels - compare keys and values
   let keysA = Object.keys(a);
   let keysB = Object.keys(b);
